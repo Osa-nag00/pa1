@@ -94,7 +94,7 @@ bool checkEqual(std::vector<int> a, std::vector<int> b)
 int main(int argc, char *argv[])
 {
     int j;
-    int numThreads = 16;
+    int numThreads = 500;
     std::vector<std::thread> threads;
 
     for (j = 0; j < numThreads; j++)
