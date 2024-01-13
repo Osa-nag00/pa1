@@ -3,15 +3,14 @@
 #include <bits/stdc++.h>
 #include <vector>
 #include <chrono>
+#include <iostream>
+#include <functional>
 #include "Counter.hpp"
 
 #define MAX_PRIME_VAL 100000000
 #define CHUNK_SIZE 12500000
 #define TEST_MAX_PRIME_VAL 10000
 #define TEST_CHUNK_SIZE 2500
-
-Counter globalCounter(1);
-int myCount = 1;
 
 template <typename Func>
 double timeFunction(Func func, std::vector<int> vec)
@@ -38,42 +37,35 @@ bool isPrime(int n)
     return true;
 }
 
-std::vector<int> listOfPrimesNoMultithreading(std::vector<int> retval)
+void printPrimes(Counter &counter, int i)
 {
-    int i;
 
-    // TODO: change the range to the actual value
-    for (i = TEST_MAX_PRIME_VAL; i > 1; i--)
+    while (i < MAX_PRIME_VAL)
     {
-        // saves making the function call if even
-        if (i % 2 != 0 && isPrime(i))
-        {
-            // adds prime number to vector
-            retval.push_back(i);
-        }
 
-        // corner case
-        // 2 is prime, even though it is even
-        if (i == 2)
+        i = counter.getNextCounterVal();
+        if (isPrime(i))
         {
-            retval.push_back(i);
+            printf("Prime: %d\n", i);
         }
     }
-
-    return retval;
 }
 
-void printPrimes()
+void printPrimesWrapper(int numThreads)
 {
 
-    while (myCount < MAX_PRIME_VAL)
-    {
+    int j;
+    Counter counter(1); /* custom increment counter that is multithreading safe*/
+    std::vector<std::thread> threads;
 
-        myCount = globalCounter.getNextCounterVal();
-        if (isPrime(myCount))
-        {
-            printf("Prime: %d\n", myCount);
-        }
+    for (j = 0; j < numThreads; j++)
+    {
+        threads.push_back(std::thread(printPrimes, std::ref(counter), 0));
+    }
+
+    for (int x = 0; x < numThreads; x++)
+    {
+        threads.at(x).join();
     }
 }
 
@@ -93,28 +85,6 @@ bool checkEqual(std::vector<int> a, std::vector<int> b)
 
 int main(int argc, char *argv[])
 {
-    int j;
-    int numThreads = 500;
-    std::vector<std::thread> threads;
-
-    for (j = 0; j < numThreads; j++)
-    {
-        // create threads
-        threads.push_back(std::thread(printPrimes));
-    }
-
-    // sort(Multi.begin(), Multi.end());
-
-    // bool retval = checkEqual(Multi, nonMulti);
-
-    // printf("Non Multi: %f milliseconds \n", msNonMulti);
-    // printf(" Multi: %f milliseconds \n", msMulti);
-    printf("%s", "Hello World!");
-
-    for (int x = 0; x < numThreads; x++)
-    {
-        threads.at(x).join();
-    }
-
+    printPrimesWrapper(2);
     return 0;
 }
