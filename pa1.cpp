@@ -5,18 +5,17 @@
 #include <chrono>
 #include <iostream>
 #include <functional>
+#include <iomanip>
 #include "Counter.hpp"
 
 #define MAX_PRIME_VAL 100000000
-#define CHUNK_SIZE 12500000
-#define TEST_MAX_PRIME_VAL 10000
-#define TEST_CHUNK_SIZE 2500
+#define TEST_MAX_PRIME_VAL 100000
 
 template <typename Func>
-double timeFunction(Func func, std::vector<int> vec)
+double timeFunction(Func func, int numThreads)
 {
     auto start = std::chrono::high_resolution_clock::now();
-    func(vec);
+    func(numThreads);
     auto end = std::chrono::high_resolution_clock::now();
 
     std::chrono::duration<double, std::milli> duration = end - start;
@@ -53,19 +52,13 @@ void printPrimes(Counter &counter, int i)
 
 void printPrimesWrapper(int numThreads)
 {
-
     int j;
-    Counter counter(1); /* custom increment counter that is multithreading safe*/
-    std::vector<std::thread> threads;
+    Counter counter(1); /* custom increment counter that is multithreading safe, this is also shared between all the threads*/
+    std::vector<std::jthread> jthreads;
 
     for (j = 0; j < numThreads; j++)
     {
-        threads.push_back(std::thread(printPrimes, std::ref(counter), 0));
-    }
-
-    for (int x = 0; x < numThreads; x++)
-    {
-        threads.at(x).join();
+        jthreads.push_back(std::jthread(printPrimes, std::ref(counter), 0));
     }
 }
 
@@ -85,6 +78,9 @@ bool checkEqual(std::vector<int> a, std::vector<int> b)
 
 int main(int argc, char *argv[])
 {
-    printPrimesWrapper(2);
+
+    double timeTaken = timeFunction(printPrimesWrapper, 8);
+
+    std::cout << "Time Taken: " << std::setprecision(2) << timeTaken / 1000 << " seconds" << std::endl;
     return 0;
 }

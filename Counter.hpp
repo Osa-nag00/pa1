@@ -21,6 +21,6 @@ Counter::Counter(int n)
 
 int Counter::getNextCounterVal()
 {
-    std::lock_guard<std::mutex> guard(lock);
+    // std::lock_guard<std::mutex> guard(lock);
     return this->counterVal++;
 }
