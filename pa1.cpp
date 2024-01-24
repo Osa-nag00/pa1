@@ -9,7 +9,6 @@
 #define NUM_THREADS 8
 /*GLOBALS*/
 std::vector<int> primes(MAX_PRIME_VAL, 1); /*If prime, index will be 1, else 0*/
-
 double executionTimeSeconds;
 int totalNumberOfPrimes;
 long sumOfAllPrimes;
@@ -120,12 +119,10 @@ int main(int argc, char *argv[])
     miscCalculations();
 
     std::string topTenPrimesString;
-    topTenPrimesString += "[";
     for (int prime : topTenPrimes)
     {
-        topTenPrimesString += std::to_string(prime) + ", ";
+        topTenPrimesString += std::to_string(prime) + " ";
     }
-    topTenPrimesString += "]";
 
     std::string outputString = "Execution time: " + std::to_string(executionTimeSeconds) + " seconds" + "\n" +
                                "Total number of primes found: " + std::to_string(totalNumberOfPrimes) + "\n" +
