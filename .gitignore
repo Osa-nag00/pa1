@@ -1,3 +1,6 @@
 
 # ignores vscode local settings folder
 .vscode
+
+# ignore exe
+pa1
