@@ -44,7 +44,7 @@ void computePrimesParallel()
 {
     int i, j, start, end;
     int segmentSize = MAX_PRIME_VAL / NUM_THREADS;
-    std::thread threads[NUM_THREADS];
+    std::jthread jthreads[NUM_THREADS];
 
     for (i = 0; i < NUM_THREADS; i++)
     {
@@ -62,13 +62,7 @@ void computePrimesParallel()
         // creating threads
         // assign them to an index
         // send them the func and params to run
-        threads[i] = std::thread(sieveOfEratosthenes, start, end);
-    }
-
-    // stop and join all the threads here before continuing
-    for (j = 0; j < NUM_THREADS; j++)
-    {
-        threads[j].join();
+        jthreads[i] = std::jthread(sieveOfEratosthenes, start, end);
     }
 }
 
