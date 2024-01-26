@@ -30,4 +30,16 @@ I switched back to giving the threads each their own chunk of numbers to check, 
 
 ## Correctness and Efficency
 
-### TODO write proof later
+To test for correctness, I can change the program to use a single thread something like changing
+
+```c++
+#define NUM_THREADS 1
+```
+
+To
+
+```c++
+#define NUM_THREADS 8
+```
+
+Running the program with either 1 or 8 threads results in the same out put, with an exception for the excecution time of course. Running a single thread, the computation takes about 4.5 seconds. However running with 8 threads takes this down to about 3.7 seconds.
